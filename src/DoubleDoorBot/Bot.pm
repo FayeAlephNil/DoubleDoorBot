@@ -26,24 +26,6 @@ sub said {
     my $throwaway = shift @last10_messages;
   }
 
-  my $a_message = $message;
-
-  foreach $a_message (@last10_messages) {
-    my $a_body = $message->{body};
-    my $a_who = $message->{raw_nick};
-    if (($a_body eq $body) && ($a_who eq $who)) {
-      $same_count++;
-      if ($same_count > 5) {
-        $self->say(
-          channel => $message->{channel},
-          body    => $nick . " stop spamming"
-        );
-      }
-    } else {
-      $same_count--;
-    }
-  }
-
   if ($body =~ m/^\$/) {
     my ($activation, $command) = split(/^\$/, $body);
 
@@ -84,6 +66,32 @@ sub said {
     channel => $message->{channel},
     body    => ('What do you need ' . $who)
     );
+  }
+
+  my $a_message = $message;
+
+  foreach $a_message (@last10_messages) {
+    my $a_body = $message->{body};
+    my $a_who = $message->{raw_nick};
+    if (($a_body eq $body) && ($a_who eq $who)) {
+      $same_count++;
+      if ($same_count > 5) {
+        $self->say(
+        channel => $message->{channel},
+        body    => $nick . " stop spamming"
+        );
+      }
+    } else {
+      $same_count--;
+    }
+  }
+
+  #check for links
+  if ($body =~ m/.*htt[ps]:\/\/.+\..+/) {
+    $self->say(
+    channel => $message->{channel},
+    body    => $nick . " you cannot post links"
+    )
   }
 }
 1;
