@@ -87,7 +87,7 @@ sub said {
   }
 
   #check for links
-  if ($body =~ m/.*htt[ps]:\/\/.+\..+/) {
+  if ($body =~ m/.*http[s?]:\/\/.+\..+.*/) {
     $self->say(
     channel => $message->{channel},
     body    => $nick . " you cannot post links"
