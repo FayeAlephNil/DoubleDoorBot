@@ -18,13 +18,7 @@ sub said {
   my $who = $message->{raw_nick};
 
   #Add to last10_messages
-  @last10_messages = push (@last10_messages, $message);
-
-  #remove first
-  if (not((scalar @last10_messages) < 10))
-  {
-    my $throwaway = shift @last10_messages;
-  }
+  @last10_messages = add_to_and_remove_if_under($message, @last10_messages, 10);
 
   if ($body =~ m/^\$/) {
     my ($activation, $command) = split(/^\$/, $body);
@@ -93,5 +87,23 @@ sub said {
     body    => $nick . " you cannot post links"
     )
   }
+
+  return;
+}
+
+sub add_to_and_remove_if_under {
+  #Get args
+  my ($to_add, @array, $num) = @_;
+
+  #Add to array
+  @array = push (@array, $to_add);
+
+  #remove first
+  if (not((scalar @array) < $num))
+  {
+    my $throwaway = shift @array;
+  }
+
+  return @array;
 }
 1;
