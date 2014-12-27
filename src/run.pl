@@ -7,7 +7,7 @@ use diagnostics;
 use DoubleDoorBot::Bot;
 use Bot::BasicBot;
 
-our $chan = '#' . prompt("What is your Twitch username (all lowercase no spaces)?");
+my $chan = '#' . prompt("What is your Twitch username (all lowercase no spaces)?");
 
 our $bot = DoubleDoorBot::Bot->new(
 server    => 'irc.twitch.tv',
