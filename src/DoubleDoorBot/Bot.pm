@@ -8,6 +8,8 @@ use Data::Dumper;
 
 my @last10_messages = [];
 my $same_count = 0;
+my @commands = [];
+my @outputs = [];
 
 #My said subroutine
 sub said {
@@ -22,6 +24,7 @@ sub said {
 
   if ($body =~ m/^\$/) {
     my ($activation, $command) = split(/^\$/, $body);
+
 
 
     #help command
@@ -51,8 +54,41 @@ sub said {
       body    => 'https://github.com/Strikingwolf/DoubleDoorBot'
       );
     }
-  } else {
-    $self->say(channel =>$message->{channel}, body => 'test');
+
+    if ($command =~ m/^addcom/) {
+      #get command
+      my ($addcom, $the_command, @body_of_command) = split(/\s/, $command);
+      push(@commands, $the_command);
+
+      my $full_body = '';
+      foreach my $part in @body_of_command {
+        $full_body = $full_body . $part . ' ';
+      }
+
+      push(@outputs, $full_body);
+    }
+
+    if ($command =~ m/^delcom/) {
+      #get command
+      my ($delcom, $command_to_delete) = split(/^delcom\s/, $command);
+
+      for (my $i = 0; $i <= scalar @commands; i++) {
+        if (@commands[i] eq $command_to_delete) {
+          splice(@commands, i);
+          splice(@outputs, i);
+        }
+      }
+    }
+
+    #check for commands
+    for (my $i = 0; $i <= scalar @commands; i++) {
+      if ($command eq @commands[i]) {
+        $self->(
+        channel => $message->{channel},
+        body    => @outputs[i]
+        );
+      }
+    }
   }
 
   if ($body =~ m/\@StrikingwolfBot/) {
